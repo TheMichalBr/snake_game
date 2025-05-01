@@ -1,3 +1,4 @@
-| Snake                           | In-Game                         |
-|---------------------------------|---------------------------------|
-| ![Snake Screenshot1](scr/1.png) | ![Snake Screenshot2](scr/2.png) |
+# Snake 'v1.0.3'
+| Snake - Menu    | Snake - In-Game |
+|-----------------|-----------------|
+| ![SS1](RM1.png) | ![SS2](RM2.png) |
