@@ -10,8 +10,9 @@ except Exception:
 SIRKA = 500
 VYSKA = 580
 VELIKOST_BUNKY = 20
+HORNI_OKRAJ = 50
+SPODNI_OKRAJ = 10
 PADDING = 10
-SPODNI_OKRAJ = 30
 
 class SnakeGame:
     def __init__(self, okno):
@@ -46,15 +47,15 @@ class SnakeGame:
         self.platno.delete("all")
         self.animace_menu()
 
-        self.platno.create_text(SIRKA//2, VYSKA//4, text="🐍 SNAKE 🐍", fill="lime", font=("Arial", 40, "bold"))
-        self.vytvor_tlacitko("PLAY", self.start_hry, VYSKA//2)
-        self.vytvor_tlacitko("QUIT", self.okno.quit, VYSKA//2 + 80)
+        self.platno.create_text(SIRKA//2, VYSKA//4, text="SNAKE", fill="lime", font=("Segoe Print", 60, "bold"))
+        self.vytvor_tlacitko("Play", self.start_hry, VYSKA//2)
+        self.vytvor_tlacitko("Quit", self.okno.quit, VYSKA//2 + 80)
 
     def vytvor_tlacitko(self, text, command, y):
         btn = tk.Button(
             self.okno,
             text=text,
-            font=("Arial", 18, "bold"),
+            font=("Franklin Gothic", 18, "bold"),
             bg="#111111",
             fg="lime",
             activebackground="#222222",
@@ -81,7 +82,7 @@ class SnakeGame:
         self.platno.delete("all")
         self.odstran_tlacitka()
 
-        self.had = [(PADDING + 100, PADDING + 100), (PADDING + 80, PADDING + 100), (PADDING + 60, PADDING + 100)]
+        self.had = [(PADDING + 100, HORNI_OKRAJ + 100), (PADDING + 80, HORNI_OKRAJ + 100), (PADDING + 60, HORNI_OKRAJ + 100)]
         self.smer = self.novy_smer = "Right"
         self.konec = False
         self.hra_bezi = True
@@ -116,20 +117,20 @@ class SnakeGame:
         else:
             barva_textu = "white"
 
-        score_text = f"SCORE: {self.skore}   |   HIGHSCORE: {self.highscore}"
-        self.platno.create_text(SIRKA // 2, VYSKA - SPODNI_OKRAJ // 2, text=score_text, fill=barva_textu,
-                                font=("Arial", 14, "bold"))
+        score_text = f"| SCORE: {self.skore}  |               |  HIGHSCORE: {self.highscore} |"
+        self.platno.create_text(SIRKA // 2, HORNI_OKRAJ // 2, text=score_text, fill=barva_textu,
+                                font=("Franklin Gothic", 16, "bold"))
 
     def kresli_mrizku(self):
         for i in range(PADDING, SIRKA - PADDING + 1, VELIKOST_BUNKY):
-            self.platno.create_line(i, PADDING, i, VYSKA - SPODNI_OKRAJ, fill="gray25")
-        for i in range(PADDING, VYSKA - SPODNI_OKRAJ + 1, VELIKOST_BUNKY):
+            self.platno.create_line(i, HORNI_OKRAJ, i, VYSKA - SPODNI_OKRAJ, fill="gray25")
+        for i in range(HORNI_OKRAJ, VYSKA - SPODNI_OKRAJ + 1, VELIKOST_BUNKY):
             self.platno.create_line(PADDING, i, SIRKA - PADDING, i, fill="gray25")
 
     def vytvor_jidlo(self):
         while True:
             x = random.randint(0, (SIRKA - 2*PADDING - VELIKOST_BUNKY) // VELIKOST_BUNKY) * VELIKOST_BUNKY + PADDING
-            y = random.randint(0, (VYSKA - SPODNI_OKRAJ - 2*PADDING - VELIKOST_BUNKY) // VELIKOST_BUNKY) * VELIKOST_BUNKY + PADDING
+            y = random.randint(0, (VYSKA - SPODNI_OKRAJ - HORNI_OKRAJ - VELIKOST_BUNKY) // VELIKOST_BUNKY) * VELIKOST_BUNKY + HORNI_OKRAJ
             if (x, y) not in self.had:
                 self.jidlo = (x, y)
                 break
@@ -154,7 +155,7 @@ class SnakeGame:
 
         if (
             x < PADDING or x >= SIRKA - PADDING or
-            y < PADDING or y >= VYSKA - SPODNI_OKRAJ or
+            y < HORNI_OKRAJ or y >= VYSKA - SPODNI_OKRAJ or
             nova_hlava in self.had
         ):
             self.konec = True
@@ -170,7 +171,7 @@ class SnakeGame:
             self.highscore = max(self.highscore, self.skore)
             self.vytvor_jidlo()
             if self.rychlost > self.min_rychlost:
-                self.rychlost -= 1.5
+                self.rychlost -= 0.2
         else:
             self.had.pop()
 
@@ -181,17 +182,17 @@ class SnakeGame:
         self.platno.delete("all")
         self.platno.configure(bg="black")
 
-        self.platno.create_text(SIRKA//2, VYSKA//4, text="GAME OVER", fill="red", font=("Arial", 40, "bold"))
-        self.platno.create_text(SIRKA//2, VYSKA//4 + 70, text=f"SCORE: {self.skore}", fill="red", font=("Arial", 20, "bold"))
+        self.platno.create_text(SIRKA//2, VYSKA//4, text="GAME OVER", fill="red", font=("Franklin Gothic", 40, "bold"))
+        self.platno.create_text(SIRKA//2, VYSKA//4 + 70, text=f"YOUR SCORE: {self.skore}", fill="red", font=("Franklin Gothic", 20))
 
-        self.vytvor_tlacitko_konec("RESTART", self.start_hry, VYSKA//2)
-        self.vytvor_tlacitko_konec("MENU", self.menu_okno, VYSKA//2 + 80)
+        self.vytvor_tlacitko_konec("Restart", self.start_hry, VYSKA//2)
+        self.vytvor_tlacitko_konec("Menu", self.menu_okno, VYSKA//2 + 80)
 
     def vytvor_tlacitko_konec(self, text, command, y):
         btn = tk.Button(
             self.okno,
             text=text,
-            font=("Arial", 18, "bold"),
+            font=("Franklin Gothic", 18, "bold"),
             bg="#111111",
             fg="red",
             activebackground="#222222",
@@ -203,7 +204,10 @@ class SnakeGame:
         self.platno.create_window(SIRKA//2, y, window=btn, width=200, height=50)
 
     def zmen_smer(self, event):
-        nove_smerovani = event.keysym
+        key = event.keysym.lower()
+        preklad = {"w": "Up", "s": "Down", "a": "Left", "d": "Right"}
+        nove_smerovani = preklad.get(key, event.keysym)
+
         opacny_smer = {"Up": "Down", "Down": "Up", "Left": "Right", "Right": "Left"}
         if nove_smerovani in opacny_smer and opacny_smer[nove_smerovani] != self.smer:
             self.novy_smer = nove_smerovani
